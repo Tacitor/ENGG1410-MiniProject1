@@ -1,9 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Lukas Krampitz
+ * October 31, 2022
+ * The Main class that is able to use a very basic type of "encrytion" to modify files
  */
 package javatestminiproj1;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
  *
@@ -15,9 +19,22 @@ public class JavaTestMiniProj1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        
-        System.out.println("Hello World");
+
+        //Read in the data file
+        try {
+            //Setup the file and scanner
+            File file = new File("src/javaTestMiniProj1/testFile.txt");
+            Scanner scanner = new Scanner(file);
+            
+            //print out the data file to the output
+            while (scanner.hasNextLine()) {
+                System.out.println(scanner.nextLine());
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File ERROR: \n" + e);
+        }
+
     }
-    
+
 }
