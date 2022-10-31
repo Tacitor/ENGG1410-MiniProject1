@@ -23,6 +23,7 @@ public class JavaTestMiniProj1 {
         boolean encrytMode = true; //whether or not the program is encrypting or decrypting
         String inputAddress = "src/javaTestMiniProj1/testFile.txt";
         String outputAddress;
+        String outputFileType = getFileType(encrytMode);
 
         //Read in the data file
         try {
@@ -31,17 +32,19 @@ public class JavaTestMiniProj1 {
             Scanner scanner = new Scanner(inputFile);
 
             //set the output adress as the same as the input but with a different file extension
-            outputAddress = inputAddress.substring(0, inputAddress.indexOf('.')) + ".crp";
+            outputAddress = inputAddress.substring(0, inputAddress.indexOf('.')) + outputFileType;
             //create a new output file
             File outputFile = new File(outputAddress);
             //create a print wrtitter to write to the file
             PrintWriter outputFileWriter = new PrintWriter(outputFile);
 
-            //write to the file
-            while (scanner.hasNextLine()) {
-                outputFileWriter.println(scanner.nextLine());
+            //now either encrypt or decrypt the file
+            if (encrytMode) {
+                //encypt
+            } else {
+                //decrypt
             }
-            
+
             //close the file
             outputFileWriter.close();
 
@@ -49,6 +52,21 @@ public class JavaTestMiniProj1 {
             System.out.println("File ERROR: \n" + e);
         }
 
+    }
+
+    /**
+     * Based off of the mode the program is in: Either encryption or decryption.
+     * Then determine the extension that should be used for the output file.
+     *
+     * @param encrytMode
+     * @return
+     */
+    protected static String getFileType(boolean encrytMode) {
+        if (encrytMode) {
+            return ".crp";
+        } else {
+            return ".txt";
+        }
     }
 
 }
