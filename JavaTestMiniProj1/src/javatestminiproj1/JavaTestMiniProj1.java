@@ -41,6 +41,7 @@ public class JavaTestMiniProj1 {
             //now either encrypt or decrypt the file
             if (encrytMode) {
                 //encypt
+                encrypt(scanner, outputFileWriter);
             } else {
                 //decrypt
             }
@@ -52,6 +53,20 @@ public class JavaTestMiniProj1 {
             System.out.println("File ERROR: \n" + e);
         }
 
+    }
+
+    /**
+     * Encrypt a file. Given a Scanner from an input file and a PrintWritter as
+     * an output-stream convert the input to an sudo encrypted file.
+     *
+     * @param scanner
+     * @param outputFileWriter
+     */
+    private static void encrypt(Scanner scanner, PrintWriter outputFileWriter) {
+        //write to the file
+        while (scanner.hasNextLine()) {
+            outputFileWriter.println(scanner.nextLine());
+        }
     }
 
     /**
