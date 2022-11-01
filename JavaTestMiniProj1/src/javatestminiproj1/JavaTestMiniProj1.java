@@ -63,6 +63,7 @@ public class JavaTestMiniProj1 {
     private static void encrypt(Scanner scanner, PrintWriter outputFileWriter) {
         String workingLine; //the current line of the input file being worked on
         char workingChar; //the character currently being worked on
+        int outChar; //the encryped version fo the workingChar
 
         //encrypt the file line by line
         //while there are still lines left loop through it
@@ -70,16 +71,27 @@ public class JavaTestMiniProj1 {
             workingLine = scanner.nextLine();
 
             for (int i = 0; i < workingLine.length(); i++) {
+                //get the next character
                 workingChar = workingLine.charAt(i);
-                System.out.print(workingChar);
+
+                //encrypt the character
+                outChar = (int) workingChar - 16;
+
+                //check if it's less than 32
+                if (outChar < 32) {
+                    outChar = (outChar - 32) + 144;
+                }
+
+                //write it
+                outputFileWriter.print(outChar + " ");
             }
-            System.out.println("");
+            outputFileWriter.println("");
 
             //outputFileWriter.println(scanner.nextLine());
         }
 
         //close the file
-        //outputFileWriter.close();
+        outputFileWriter.close();
     }
 
     /**
