@@ -46,11 +46,11 @@ public class JavaTestMiniProj1 {
                 //decrypt
                 System.out.println("Lol Can't");
             }
-
+            
         } catch (FileNotFoundException e) {
             System.out.println("File ERROR: \n" + e);
         }
-
+        
     }
 
     /**
@@ -69,7 +69,7 @@ public class JavaTestMiniProj1 {
         //while there are still lines left loop through it
         while (scanner.hasNextLine()) {
             workingLine = scanner.nextLine();
-
+            
             for (int i = 0; i < workingLine.length(); i++) {
                 //get the next character
                 workingChar = workingLine.charAt(i);
@@ -83,7 +83,11 @@ public class JavaTestMiniProj1 {
                 }
 
                 //write it
-                outputFileWriter.print(outChar + " ");
+                outputFileWriter.print(decimalToHex(outChar) + " ");
+                
+                if (decimalToHex(outChar).equals("80")) {
+                    System.out.println("YES");
+                }
             }
             outputFileWriter.println("");
 
@@ -92,6 +96,45 @@ public class JavaTestMiniProj1 {
 
         //close the file
         outputFileWriter.close();
+    }
+    
+    public static String decimalToHex(int num) {
+        String hex = "";
+        int quotient;
+        int remainder;
+        
+        quotient = num / 16;
+        remainder = num % 16;
+
+        //base case
+        if (quotient == 0) {
+            return "" + digitDecimalToHex(remainder);
+        } else { //recurse
+            return decimalToHex(quotient) + digitDecimalToHex(remainder);
+        }
+    }
+    
+    public static String digitDecimalToHex(int num) {
+        if (num < 10) {
+            return "" + num;
+        } else {
+            switch (num) {
+                case 10:
+                    return "A";
+                case 11:
+                    return "B";
+                case 12:
+                    return "C";
+                case 13:
+                    return "D";
+                case 14:
+                    return "E";
+                case 15:
+                    return "F";
+                default:
+                    return "ZZ"; //not single digit (In Hex) input was given (or I'm just shit at code)
+            }
+        }
     }
 
     /**
@@ -108,5 +151,5 @@ public class JavaTestMiniProj1 {
             return ".txt";
         }
     }
-
+    
 }
