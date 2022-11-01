@@ -46,11 +46,11 @@ public class JavaTestMiniProj1 {
                 //decrypt
                 System.out.println("Lol Can't");
             }
-            
+
         } catch (FileNotFoundException e) {
             System.out.println("File ERROR: \n" + e);
         }
-        
+
     }
 
     /**
@@ -64,30 +64,40 @@ public class JavaTestMiniProj1 {
         String workingLine; //the current line of the input file being worked on
         char workingChar; //the character currently being worked on
         int outChar; //the encryped version fo the workingChar
+        String outCharAsFinal; //either the TT sequence or the HEX version of the encrypted ascii data
 
         //encrypt the file line by line
         //while there are still lines left loop through it
         while (scanner.hasNextLine()) {
             workingLine = scanner.nextLine();
-            
+
             for (int i = 0; i < workingLine.length(); i++) {
                 //get the next character
                 workingChar = workingLine.charAt(i);
 
-                //encrypt the character
-                outChar = (int) workingChar - 16;
+                //check if there is a tab
+                if (workingChar == 9) {
+                    //if yes then write a TT
+                    outCharAsFinal = "TT";
 
-                //check if it's less than 32
-                if (outChar < 32) {
-                    outChar = (outChar - 32) + 144;
+                } else {
+
+                    //encrypt the character
+                    outChar = (int) workingChar - 16;
+
+                    //check if it's less than 32
+                    if (outChar < 32) {
+                        outChar = (outChar - 32) + 144;
+                    }
+
+                    //convert to hex
+                    outCharAsFinal = decimalToHex(outChar);
+
                 }
 
                 //write it
-                outputFileWriter.print(decimalToHex(outChar) + " ");
-                
-                if (decimalToHex(outChar).equals("80")) {
-                    System.out.println("YES");
-                }
+                outputFileWriter.print(outCharAsFinal + " ");
+
             }
             outputFileWriter.println("");
 
@@ -97,12 +107,12 @@ public class JavaTestMiniProj1 {
         //close the file
         outputFileWriter.close();
     }
-    
+
     public static String decimalToHex(int num) {
         String hex = "";
         int quotient;
         int remainder;
-        
+
         quotient = num / 16;
         remainder = num % 16;
 
@@ -113,7 +123,7 @@ public class JavaTestMiniProj1 {
             return decimalToHex(quotient) + digitDecimalToHex(remainder);
         }
     }
-    
+
     public static String digitDecimalToHex(int num) {
         if (num < 10) {
             return "" + num;
@@ -151,5 +161,5 @@ public class JavaTestMiniProj1 {
             return ".txt";
         }
     }
-    
+
 }
