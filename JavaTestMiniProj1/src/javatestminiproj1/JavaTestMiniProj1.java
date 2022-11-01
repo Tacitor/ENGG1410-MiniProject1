@@ -44,10 +44,8 @@ public class JavaTestMiniProj1 {
                 encrypt(scanner, outputFileWriter);
             } else {
                 //decrypt
+                System.out.println("Lol Can't");
             }
-
-            //close the file
-            outputFileWriter.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("File ERROR: \n" + e);
@@ -63,10 +61,25 @@ public class JavaTestMiniProj1 {
      * @param outputFileWriter
      */
     private static void encrypt(Scanner scanner, PrintWriter outputFileWriter) {
-        //write to the file
+        String workingLine; //the current line of the input file being worked on
+        char workingChar; //the character currently being worked on
+
+        //encrypt the file line by line
+        //while there are still lines left loop through it
         while (scanner.hasNextLine()) {
-            outputFileWriter.println(scanner.nextLine());
+            workingLine = scanner.nextLine();
+
+            for (int i = 0; i < workingLine.length(); i++) {
+                workingChar = workingLine.charAt(i);
+                System.out.print(workingChar);
+            }
+            System.out.println("");
+
+            //outputFileWriter.println(scanner.nextLine());
         }
+
+        //close the file
+        //outputFileWriter.close();
     }
 
     /**
