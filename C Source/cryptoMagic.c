@@ -12,21 +12,24 @@ int main(void)
 {
     _Bool encrytMode = 1; // whether or not the program is encrypting or decrypting
     char inputAddress[300] = "C:/Users/Lukas/Documents/Uni/Sem 1/Intro Programming/ENGG1410-MiniProject1/C Source/testFile.txt";
-    char outputAddress[100];
+    char outputAddress[100] = "C:/Users/Lukas/Documents/Uni/Sem 1/Intro Programming/ENGG1410-MiniProject1/C Source/testFile";
 
     char outputFileType[100];
     getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
+    strcat(outputAddress, outputFileType);   // add on the file extension
 
     // create the FILE pointer
     FILE *inputFile;
+    FILE *outputFile;
     // create the char that hold the current working character
     char workingChar;
 
     // open the file so it can be read
     inputFile = fopen(inputAddress, "r");
+    outputFile = fopen(outputAddress, "w"); // open the output in such a way it can be written to
 
     // check if there were anny issues opening the file
-    if (NULL == inputFile)
+    if (NULL == inputFile || NULL == outputFile)
     {
         printf("ERROR opening the file\n");
     }
@@ -40,9 +43,11 @@ int main(void)
 
             // print that bad boy out
             printf("%c", workingChar);
+            fprintf(outputFile, "%c", workingChar);
         }
 
         // don't forget to close the file
+        fclose(outputFile);
         fclose(inputFile);
     }
 
