@@ -38,12 +38,17 @@ int main(void)
         // check if the end of the file has been reached
         while (!feof(inputFile))
         {
-            // get the nect char
+            // get the next char
             workingChar = fgetc(inputFile);
 
-            // print that bad boy out
-            printf("%c", workingChar);
-            fprintf(outputFile, "%c", workingChar);
+            // check if it is a negative 1 (-1)
+            if ((int)workingChar != -1)
+            {
+
+                // print that bad boy out
+                printf("%d ", workingChar);
+                fprintf(outputFile, "%c", workingChar);
+            }
         }
 
         // don't forget to close the file
