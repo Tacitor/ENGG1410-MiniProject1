@@ -19,6 +19,8 @@ int main(void)
 
     // create the FILE pointer
     FILE *inputFile;
+    // create the char that hold the current working character
+    char workingChar;
 
     // open the file so it can be read
     inputFile = fopen(inputAddress, "r");
@@ -29,8 +31,19 @@ int main(void)
         printf("ERROR opening the file\n");
     }
     else // if there was no error, read the file
-    { 
-        printf("Good to go");
+    {
+        // check if the end of the file has been reached
+        while (!feof(inputFile))
+        {
+            // get the nect char
+            workingChar = fgetc(inputFile);
+
+            // print that bad boy out
+            printf("%c", workingChar);
+        }
+
+        // don't forget to close the file
+        fclose(inputFile);
     }
 
     return 0;
