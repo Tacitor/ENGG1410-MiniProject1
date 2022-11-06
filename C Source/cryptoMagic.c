@@ -11,14 +11,27 @@ void getFileType(_Bool encrytMode, char outputFileType[100]);
 int main(void)
 {
     _Bool encrytMode = 1; // whether or not the program is encrypting or decrypting
-    char inputAddress[100] = "src/javaTestMiniProj1/testFile.txt";
+    char inputAddress[300] = "C:/Users/Lukas/Documents/Uni/Sem 1/Intro Programming/ENGG1410-MiniProject1/C Source/testFile.txt";
     char outputAddress[100];
 
     char outputFileType[100];
     getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
 
-    printf("Testing hello there");
-    printf("%s", outputFileType);
+    // create the FILE pointer
+    FILE *inputFile;
+
+    // open the file so it can be read
+    inputFile = fopen(inputAddress, "r");
+
+    // check if there were anny issues opening the file
+    if (NULL == inputFile)
+    {
+        printf("ERROR opening the file\n");
+    }
+    else // if there was no error, read the file
+    { 
+        printf("Good to go");
+    }
 
     return 0;
 }
