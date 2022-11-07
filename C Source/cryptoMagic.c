@@ -13,8 +13,8 @@ void decimalToHex(int num, char leArray[2]);
 int main(void)
 {
     _Bool encrytMode = 1; // whether or not the program is encrypting or decrypting
-    char inputAddress[300] = "C:/Users/Lukas/Documents/Uni/Sem 1/Intro Programming/ENGG1410-MiniProject1/C Source/testFile.txt";
-    char outputAddress[100] = "C:/Users/Lukas/Documents/Uni/Sem 1/Intro Programming/ENGG1410-MiniProject1/C Source/testFile";
+    char inputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile.txt";
+    char outputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile";
 
     char outputFileType[100];
     getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
@@ -58,8 +58,8 @@ int main(void)
                 }
                 else if (workingChar == 10)
                 {                           // check for a line feed
-                    outCharAsFinal[0] = 10; // clear the other indexes
-                    outCharAsFinal[1] = 0;  // set it to a LF
+                    outCharAsFinal[0] = 10; // set it to a LF
+                    outCharAsFinal[1] = 0;  // clear the other indexes
                 }
                 else
                 {
