@@ -58,8 +58,8 @@ int main(void)
                 }
                 else if (workingChar == 10)
                 {                           // check for a line feed
-                    outCharAsFinal[0] = 10;  // clear the other indexes
-                    outCharAsFinal[1] = 0; // set it to a LF
+                    outCharAsFinal[0] = 10; // clear the other indexes
+                    outCharAsFinal[1] = 0;  // set it to a LF
                 }
                 else
                 {
