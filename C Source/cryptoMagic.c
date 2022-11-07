@@ -29,7 +29,7 @@ int main(void)
     outputFile = fopen(outputAddress, "w"); // open the output in such a way it can be written to
     char workingChar;                       // create the char that hold the current working character
     int outChar;                            // the encryped version fo the workingChar
-    char outCharAsFinal[4];                 // either the TT sequence or the HEX version of the encrypted ascii data
+    char outCharAsFinal[3];                 // either the TT sequence or the HEX version of the encrypted ascii data
 
     // check if there were anny issues opening the file
     if (NULL == inputFile || NULL == outputFile)
@@ -56,6 +56,11 @@ int main(void)
                     // if yes then write a TT
                     strcpy(outCharAsFinal, "TT");
                 }
+                else if (workingChar == 10)
+                {                           // check for a line feed
+                    outCharAsFinal[0] = 10;  // clear the other indexes
+                    outCharAsFinal[1] = 0; // set it to a LF
+                }
                 else
                 {
                     // get the char as an int and shift it
@@ -71,7 +76,7 @@ int main(void)
                     decimalToHex(outChar, outCharAsFinal);
                 }
 
-                fprintf(outputFile, "%s ", outCharAsFinal);
+                fprintf(outputFile, "%s", outCharAsFinal);
             }
         }
         // don't forget to close the file
