@@ -21,8 +21,8 @@ int main(void)
     strcat(outputAddress, outputFileType);   // add on the file extension
 
     // create the FILE pointer
-    FILE *inputFile;
-    FILE *outputFile;
+    FILE *inputFile = NULL;
+    FILE *outputFile = NULL;
 
     // open the file so it can be read
     inputFile = fopen(inputAddress, "r");
