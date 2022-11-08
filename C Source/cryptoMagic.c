@@ -10,11 +10,30 @@ void getFileType(_Bool encrytMode, char outputFileType[100]);
 char digitDecimalToHex(int num);
 void decimalToHex(int num, char leArray[2]);
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    _Bool encrytMode = 1; // whether or not the program is encrypting or decrypting
+    _Bool encrytMode = 1; // whether or not the program is encrypting or decrypting. Default to encryption mode
     char inputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile.txt";
     char outputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile";
+
+    // loop through the cli arguments. Get the encrption mode and the target file
+    for (int i = 0; i < argc; i++)
+    {
+        //  check if "-E" or "-e" were passed for ecryption mode
+        if (!strcmp(argv[i], "-E") || !strcmp(argv[i], "-e"))
+        {
+            // set mode to encrption
+            encrytMode = 1;
+        }
+        else //  check if "-d" or "-D" were passed for decryption mode
+        {
+            if (!strcmp(argv[i], "-D") || !strcmp(argv[i], "-d"))
+            {
+                // set mode to encrption
+                encrytMode = 0;
+            }
+        }
+    }
 
     char outputFileType[100];
     getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
