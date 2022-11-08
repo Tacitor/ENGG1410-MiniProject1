@@ -16,23 +16,17 @@ int main(int argc, char *argv[])
     char inputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile.txt";
     char outputAddress[300] = "C:/Users/Lukas/OneDrive/OneDrive - University of Guelph/Documents/C programs/ENGG1410-MiniProject1/C Source/testFile";
 
-    // loop through the cli arguments. Get the encrption mode and the target file
-    for (int i = 0; i < argc; i++)
+    // go through the cli arguments. Get the encrption mode and the target file
+    //  check if "-E" or "-e" were passed for ecryption mode
+    if (!strcmp(argv[1], "-E") || !strcmp(argv[1], "-e"))
     {
-        //  check if "-E" or "-e" were passed for ecryption mode
-        if (!strcmp(argv[i], "-E") || !strcmp(argv[i], "-e"))
-        {
-            // set mode to encrption
-            encrytMode = 1;
-        }
-        else //  check if "-d" or "-D" were passed for decryption mode
-        {
-            if (!strcmp(argv[i], "-D") || !strcmp(argv[i], "-d"))
-            {
-                // set mode to encrption
-                encrytMode = 0;
-            }
-        }
+        // set mode to encrption
+        encrytMode = 1;
+    }
+    else if (!strcmp(argv[1], "-D") || !strcmp(argv[1], "-d")) //  check if "-d" or "-D" were passed for decryption mode
+    {
+        // set mode to encrption
+        encrytMode = 0;
     }
 
     char outputFileType[100];
