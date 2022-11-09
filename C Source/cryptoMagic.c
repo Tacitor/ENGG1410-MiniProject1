@@ -47,78 +47,94 @@ int main(int argc, char *argv[])
         }
     }
 
-    char outputFileType[100];
-    getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
-    strcat(outputAddress, outputFileType);   // add on the file extension
-
-    // debug the file addresses.
-    // printf("\nInput Address: \t\t%s", inputAddress);
-    // printf("\nOutput Address: \t%s", outputAddress);
-
-    // create the FILE pointer
-    FILE *inputFile = NULL;
-    FILE *outputFile = NULL;
-
-    // open the file so it can be read
-    inputFile = fopen(inputAddress, "r");
-    outputFile = fopen(outputAddress, "w"); // open the output in such a way it can be written to
-    char workingChar;                       // create the char that hold the current working character
-    int outChar;                            // the encryped version fo the workingChar
-    char outCharAsFinal[2];                 // either the TT sequence or the HEX version of the encrypted ascii data
-
-    // check if there were anny issues opening the file
-    if (NULL == inputFile || NULL == outputFile)
-    {
-        printf("\nERROR opening the file\n");
+    if (inputAddress[0] == '\0')
+    { // check to see if the string is empty or null
+        printf("ERROR: No file to encrypt");
     }
-    else // if there was no error, read the file
+    else // there was a file to encrypt encluded
     {
-        // check if the end of the file has been reached
-        while (!feof(inputFile))
+
+        char outputFileType[100];
+        getFileType(encrytMode, outputFileType); // set the file type to either .txt or .crp
+        strcat(outputAddress, outputFileType);   // add on the file extension
+
+        // debug the file addresses.
+        // printf("\nInput Address: \t\t%s", inputAddress);
+        // printf("\nOutput Address: \t%s", outputAddress);
+
+        // create the FILE pointer
+        FILE *inputFile = NULL;
+        FILE *outputFile = NULL;
+
+        // open the file so it can be read
+        inputFile = fopen(inputAddress, "r");
+        // check if there were anny issues opening the file
+        if (NULL == inputFile)
         {
-            // get the next char
-            workingChar = fgetc(inputFile);
-
-            // check if it is a negative 1 (-1)
-            if ((int)workingChar != -1)
-            {
-
-                // =-=-=-=-=now lets encrypt the file=-=-=-=-=-=
-
-                // check if there is a tab
-                if (workingChar == 9)
-                {
-                    // if yes then write a TT
-                    strcpy(outCharAsFinal, "TT");
-                }
-                else if (workingChar == 10)
-                {                             // check for a line feed
-                    outCharAsFinal[0] = 10;   // set it to a LF
-                    outCharAsFinal[1] = '\0'; // clear the other indexes
-                }
-                else
-                {
-                    // get the char as an int and shift it
-                    outChar = (int)workingChar - 16;
-
-                    // check if it's less than 32
-                    if (outChar < 32)
-                    {
-                        outChar = (outChar - 32) + 144;
-                    }
-
-                    // convert to hex
-                    decimalToHex(outChar, outCharAsFinal);
-                }
-
-                fprintf(outputFile, "%s", outCharAsFinal);
-            }
+            printf("\nERROR opening the input file. Might not exists.\n");
         }
-        // don't forget to close the file
-        fclose(outputFile);
+        else // if a good input file was given
+        {
+
+            outputFile = fopen(outputAddress, "w"); // open the output in such a way it can be written to
+            char workingChar;                       // create the char that hold the current working character
+            int outChar;                            // the encryped version fo the workingChar
+            char outCharAsFinal[2];                 // either the TT sequence or the HEX version of the encrypted ascii data
+
+            // check if there were anny issues opening the file
+            if (NULL == outputFile)
+            {
+                printf("\nERROR opening the output file\n");
+            }
+            else // if there was no error, read the file
+            {
+                // check if the end of the file has been reached
+                while (!feof(inputFile))
+                {
+                    // get the next char
+                    workingChar = fgetc(inputFile);
+
+                    // check if it is a negative 1 (-1)
+                    if ((int)workingChar != -1)
+                    {
+
+                        // =-=-=-=-=now lets encrypt the file=-=-=-=-=-=
+
+                        // check if there is a tab
+                        if (workingChar == 9)
+                        {
+                            // if yes then write a TT
+                            strcpy(outCharAsFinal, "TT");
+                        }
+                        else if (workingChar == 10)
+                        {                             // check for a line feed
+                            outCharAsFinal[0] = 10;   // set it to a LF
+                            outCharAsFinal[1] = '\0'; // clear the other indexes
+                        }
+                        else
+                        {
+                            // get the char as an int and shift it
+                            outChar = (int)workingChar - 16;
+
+                            // check if it's less than 32
+                            if (outChar < 32)
+                            {
+                                outChar = (outChar - 32) + 144;
+                            }
+
+                            // convert to hex
+                            decimalToHex(outChar, outCharAsFinal);
+                        }
+
+                        fprintf(outputFile, "%s", outCharAsFinal);
+                    }
+                }
+            }
+            // don't forget to close the file
+            fclose(outputFile);
+        }
         fclose(inputFile);
     }
-
     return 0;
 }
 
