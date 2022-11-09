@@ -10,6 +10,7 @@ void getFileType(_Bool encrytMode, char outputFileType[100]);
 char digitDecimalToHex(int num);
 void decimalToHex(int num, char leArray[2]);
 void getNameBeforeDot(int inSize, char in[inSize], int outSize, char out[outSize]);
+void encrypt(FILE *inputFile, FILE *outputFile);
 
 /**
  * The main method
@@ -77,9 +78,6 @@ int main(int argc, char *argv[])
         {
 
             outputFile = fopen(outputAddress, "w"); // open the output in such a way it can be written to
-            char workingChar;                       // create the char that hold the current working character
-            int outChar;                            // the encryped version fo the workingChar
-            char outCharAsFinal[3];                 // either the TT sequence or the HEX version of the encrypted ascii data
 
             // check if there were anny issues opening the file
             if (NULL == outputFile)
@@ -88,46 +86,15 @@ int main(int argc, char *argv[])
             }
             else // if there was no error, read the file
             {
-                // check if the end of the file has been reached
-                while (!feof(inputFile))
+                // check if we are encrypting or decrypting
+                if (encrytMode)
                 {
-                    // get the next char
-                    workingChar = fgetc(inputFile);
-
-                    // check if it is a negative 1 (-1)
-                    if ((int)workingChar != -1)
-                    {
-
-                        // =-=-=-=-=now lets encrypt the file=-=-=-=-=-=
-
-                        // check if there is a tab
-                        if (workingChar == 9)
-                        {
-                            // if yes then write a TT
-                            strcpy(outCharAsFinal, "TT");
-                        }
-                        else if (workingChar == 10)
-                        {                             // check for a line feed
-                            outCharAsFinal[0] = 10;   // set it to a LF
-                            outCharAsFinal[1] = '\0'; // clear the other indexes
-                        }
-                        else
-                        {
-                            // get the char as an int and shift it
-                            outChar = (int)workingChar - 16;
-
-                            // check if it's less than 32
-                            if (outChar < 32)
-                            {
-                                outChar = (outChar - 32) + 144;
-                            }
-
-                            // convert to hex
-                            decimalToHex(outChar, outCharAsFinal);
-                        }
-
-                        fprintf(outputFile, "%s", outCharAsFinal);
-                    }
+                    // encrypt
+                    encrypt(inputFile, outputFile);
+                }
+                else
+                {
+                    // decrypt
                 }
             }
             // don't forget to close the file
@@ -136,6 +103,59 @@ int main(int argc, char *argv[])
         fclose(inputFile);
     }
     return 0;
+}
+
+/**
+ * Given an input file and an output file encrypt the input and store it in the output.
+ * Also its not really encryption, its a bitshift followed by an convertion to HEX, but hey close enough.
+ */
+void encrypt(FILE *inputFile, FILE *outputFile)
+{
+    char workingChar;       // create the char that hold the current working character
+    int outChar;            // the encryped version fo the workingChar
+    char outCharAsFinal[3]; // either the TT sequence or the HEX version of the encrypted ascii data
+
+    // check if the end of the file has been reached
+    while (!feof(inputFile))
+    {
+        // get the next char
+        workingChar = fgetc(inputFile);
+
+        // check if it is a negative 1 (-1)
+        if ((int)workingChar != -1)
+        {
+
+            // =-=-=-=-=now lets encrypt the file=-=-=-=-=-=
+
+            // check if there is a tab
+            if (workingChar == 9)
+            {
+                // if yes then write a TT
+                strcpy(outCharAsFinal, "TT");
+            }
+            else if (workingChar == 10)
+            {                             // check for a line feed
+                outCharAsFinal[0] = 10;   // set it to a LF
+                outCharAsFinal[1] = '\0'; // clear the other indexes
+            }
+            else
+            {
+                // get the char as an int and shift it
+                outChar = (int)workingChar - 16;
+
+                // check if it's less than 32
+                if (outChar < 32)
+                {
+                    outChar = (outChar - 32) + 144;
+                }
+
+                // convert to hex
+                decimalToHex(outChar, outCharAsFinal);
+            }
+
+            fprintf(outputFile, "%s", outCharAsFinal);
+        }
+    }
 }
 
 /**
