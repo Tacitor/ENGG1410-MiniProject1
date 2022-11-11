@@ -11,6 +11,11 @@ char digitDecimalToHex(int num);
 void decimalToHex(int num, char leArray[2]);
 void getNameBeforeDot(int inSize, char in[inSize], int outSize, char out[outSize]);
 void encrypt(FILE *inputFile, FILE *outputFile);
+void decrypt(FILE *inputFile, FILE *outputFile);
+int hexToDecimal(char val16s, char val1s);
+int digitHexToDecimal(char digit);
+
+int test = 3; //temp test NEED TO REMOVE THIS AFTER TESTIN IS DONE
 
 /**
  * The main method
@@ -95,6 +100,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     // decrypt
+                    decrypt(inputFile, outputFile);
                 }
             }
             // don't forget to close the file
@@ -106,6 +112,73 @@ int main(int argc, char *argv[])
 }
 
 /**
+ * Given an input file and an output file decrypt the input and store it in the output.
+ * Also its not really decryption, its a convertion to DECimal followed by a bitshift, but hey close enough.
+ */
+void decrypt(FILE *inputFile, FILE *outputFile)
+{
+    char workingChars[2]; // create the string that holds the current working set of hex characters
+    int outChar;          // the decryped version of the workingChar
+
+    // check if the end of the file has been reached
+    while (!feof(inputFile))
+    {
+        // get the next two chars
+        workingChars[0] = fgetc(inputFile);
+        workingChars[1] = fgetc(inputFile);
+
+        // check if it is a negative 1 (-1) (which is sometimes at the end of windows files)
+        if ((int)workingChars[0] != -1 || (int)workingChars[1] != -1)
+        {
+
+            // =-=-=-=-=now lets decrypt the file=-=-=-=-=-=
+
+            // check if there is a tab
+            if (workingChars[0] == 'T' || workingChars[1] == 'T')
+            {
+                // if yes then write a TT
+                outChar = 9;
+            }
+            else if ((int)workingChars[0] == 10)
+            {                 // check for a line feed
+                outChar = 10; // set it to a LF
+            }
+            else
+            {
+                // convert to decimal
+                outChar = hexToDecimal((int)workingChars[0], (int)workingChars[1]);
+
+                if (test > 0)
+                {
+                    test--;
+
+                    printf("\nworkingChars[0]: %c", workingChars[0]);
+                    printf("\nworkingChars[1]: %c", workingChars[1]);
+
+                    printf("\nworkingCharsInHEX[1]: %d", digitHexToDecimal((int)workingChars[0]));
+                    printf("\nworkingCharsInHEX[0]: %d", digitHexToDecimal((int)workingChars[1]));
+
+                    printf("\nOutput: %d\n", outChar);
+                }
+
+                // get the char as an int and shift it
+                outChar += +16;
+
+                // check if it's greater than 127
+                if (outChar > 127)
+                {
+                    // do the thing
+                    outChar = (outChar - 144) + 32;
+                }
+            }
+
+            // write it to the file
+            fprintf(outputFile, "%c", outChar);
+        }
+    }
+}
+
+/**
  * Given an input file and an output file encrypt the input and store it in the output.
  * Also its not really encryption, its a bitshift followed by an convertion to HEX, but hey close enough.
  */
@@ -113,7 +186,7 @@ void encrypt(FILE *inputFile, FILE *outputFile)
 {
     char workingChar;       // create the char that hold the current working character
     int outChar;            // the encryped version fo the workingChar
-    char outCharAsFinal[3]; // either the TT sequence or the HEX version of the encrypted ascii data
+    char outCharAsFinal[2]; // either the TT sequence or the HEX version of the encrypted ascii data
 
     // check if the end of the file has been reached
     while (!feof(inputFile))
@@ -213,6 +286,50 @@ void getFileType(_Bool encrytMode, char outputFileType[100])
     else
     {
         strcpy(outputFileType, ".txt");
+    }
+}
+
+/**
+ * Take in a two digit hexadecimal value and convert it to decimal
+ */
+int hexToDecimal(char val16s, char val1s)
+{
+    int decimal = 0;
+
+    decimal += (digitHexToDecimal(val16s) * 16);
+    decimal += digitHexToDecimal(val1s);
+
+    return decimal;
+}
+
+/**
+ * Take in a hex digit, and return its value in decimal.
+ */
+int digitHexToDecimal(char digit)
+{
+    if ((digit - '0') < 10)
+    {
+        return (int)(digit - '0');
+    }
+    else
+    {
+        switch (digit)
+        {
+        case 65:
+            return 10;
+        case 66:
+            return 11;
+        case 67:
+            return 12;
+        case 68:
+            return 13;
+        case 69:
+            return 14;
+        case 70:
+            return 15;
+        default:
+            return digit; // not single digit (In Hex) input was given (or I'm just shit at code)
+        }
     }
 }
 
