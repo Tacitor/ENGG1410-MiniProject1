@@ -15,8 +15,6 @@ void decrypt(FILE *inputFile, FILE *outputFile);
 int hexToDecimal(char val16s, char val1s);
 int digitHexToDecimal(char digit);
 
-int test = 3; //temp test NEED TO REMOVE THIS AFTER TESTIN IS DONE
-
 /**
  * The main method
  */
@@ -123,55 +121,50 @@ void decrypt(FILE *inputFile, FILE *outputFile)
     // check if the end of the file has been reached
     while (!feof(inputFile))
     {
-        // get the next two chars
+        // get the first char
         workingChars[0] = fgetc(inputFile);
-        workingChars[1] = fgetc(inputFile);
 
-        // check if it is a negative 1 (-1) (which is sometimes at the end of windows files)
-        if ((int)workingChars[0] != -1 || (int)workingChars[1] != -1)
+        if ((int)workingChars[0] != -1) // check for strange windows EOF behaviour
         {
-
-            // =-=-=-=-=now lets decrypt the file=-=-=-=-=-=
-
-            // check if there is a tab
-            if (workingChars[0] == 'T' || workingChars[1] == 'T')
-            {
-                // if yes then write a TT
-                outChar = 9;
-            }
-            else if ((int)workingChars[0] == 10)
-            {                 // check for a line feed
-                outChar = 10; // set it to a LF
+            if ((int)workingChars[0] == 10) // check to see if a single width LF was taken in
+            {                               // check for a line feed
+                outChar = 10;               // set it to a LF
+                workingChars[1] = '\0';     // just make note that the string is done here
             }
             else
             {
-                // convert to decimal
-                outChar = hexToDecimal((int)workingChars[0], (int)workingChars[1]);
+                // if there is no LF then it is a dual character value and the other needs to be read
+                workingChars[1] = fgetc(inputFile);
 
-                if (test > 0)
+                // check if it is a negative 1 (-1) (which is sometimes at the end of windows files)
+                if ((int)workingChars[1] != -1)
                 {
-                    test--;
 
-                    printf("\nworkingChars[0]: %c", workingChars[0]);
-                    printf("\nworkingChars[1]: %c", workingChars[1]);
+                    // =-=-=-=-=now lets decrypt the file=-=-=-=-=-=
 
-                    printf("\nworkingCharsInHEX[1]: %d", digitHexToDecimal((int)workingChars[0]));
-                    printf("\nworkingCharsInHEX[0]: %d", digitHexToDecimal((int)workingChars[1]));
+                    // check if there is a tab
+                    if (workingChars[0] == 'T' && workingChars[1] == 'T')
+                    {
+                        // if yes then write a TT
+                        outChar = 9;
+                    }
+                    else
+                    {
+                        // convert to decimal
+                        outChar = hexToDecimal((int)workingChars[0], (int)workingChars[1]);
 
-                    printf("\nOutput: %d\n", outChar);
-                }
+                        // get the char as an int and shift it
+                        outChar += +16;
 
-                // get the char as an int and shift it
-                outChar += +16;
-
-                // check if it's greater than 127
-                if (outChar > 127)
-                {
-                    // do the thing
-                    outChar = (outChar - 144) + 32;
+                        // check if it's greater than 127
+                        if (outChar > 127)
+                        {
+                            // do the thing
+                            outChar = (outChar - 144) + 32;
+                        }
+                    }
                 }
             }
-
             // write it to the file
             fprintf(outputFile, "%c", outChar);
         }
